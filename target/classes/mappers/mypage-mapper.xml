@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mypageMapper">
+	<select id="selectExpert" resultMap="ExpertResultMap">
+		select *
+		from expert_user
+		where user_num = #{id}
+	</select>
+	
+	<update id="updateProfile">
+		update expert_user
+		set EXPERT_POSTADD=#{expertPostAdd}, EXPERT_ADDRESS=#{expertAddress}, EXPERT_ADD_DETAIL=#{expertAddDetail}, EXPERT_SORT=#{expertSort}, 
+		EXPERT_MEDI=#{expertMedi}, EXPERT_DEPT=#{expertDept}, EXPERT_PROFILE=#{expertProfile}, EXPERT_HOMEPAGE=#{expertHomepage}, EXPERT_CAREER=#{expertCareer}
+		where user_num=#{userNum}
+	</update>
+	
+	<select id="selectGeneral" resultMap="GeneralResultMap">
+		select *
+		from general_user
+		where user_num = #{id}
+	</select>
+	
+	<insert id="pointInsert">
+		insert into point
+		values(seq_point.nextval,#{updateName}, +#{updatePoint}, SYSDATE,
+			 #{id})
+	</insert>
+	
+	<select id="selectPoint" resultMap="pointResultMap">
+		select *
+		from (SELECT * FROM POINT WHERE USER_NUM=#{id} ORDER BY Point_num desc)
+		where ROWNUM = 1
+	</select>
+	
+	<select id="selectAllPoint" parameterType="map" resultMap="pointResultMap">
+		select *
+		from point
+		where user_num = #{id}
+		ORDER BY point_num desc
+	</select>
+	
+	<update id="pointTotal">
+		update member
+		set user_point = user_point + #{updatePointTotal} 
+		where user_num=#{id}
+	</update>
+	
+	<update id="deleteMember">
+		update member
+		set user_status = 'N'
+		where user_num=#{userNum}
+	</update>
+	
+	<select id="selectAllMember" resultMap="loginResultMap">
+      select *
+      from member
+      where USER_num = #{id}
+   </select>
+   
+   <select id="selectAllCoupon" parameterType="map" resultMap="couponResultMap">
+      select *
+      from Coupon
+      where USER_num = #{id} and TO_DATE(COU_ENDDATE) >= SYSDATE
+   </select>
+   
+   <select id="selectAdminCoupon" parameterType="map" resultMap="couponResultMap">
+      select *
+      from Coupon
+      where  COU_USED = 'A'
+   </select>
+   
+   <insert id="couponInsert" parameterType="Coupon">
+		insert into Coupon
+		values(seq_cou.nextval,#{couPublishDate}, #{couEndDate}, 'N',#{couDiscount},#{couIntro},#{userNum},#{couRegister})
+	</insert>
+	
+	<select id="selectAllBoard" parameterType="map" resultMap="boardResultMap">
+      select *
+      from Board
+      where USER_NUM = #{id} and BOARD_STATUS = 'Y'
+      order by board_num desc
+   </select>
+   
+   <select id="selectAllReply" parameterType="map" resultMap="replyResultMap">
+      select *
+      from Reply
+      where USER_NUM = #{id} and REPLY_STATUS = 'Y'
+      order by REPLY_NUM desc
+   </select>
+   
+   <select id="selectAllReview" parameterType="map" resultMap="reviewResultMap">
+      select *
+      from Review
+      where USER_NUM = #{id} and RV_STATUS = 'Y'
+      order by RV_NUM desc
+   </select>
+   
+   <select id="seletAllzzim" parameterType="map" resultMap="SupplementResultSet">
+   select *
+from zzim join product using(pro_num)
+where user_num = #{id}
+   </select>
+   
+   <select id="getListCountZZim" parameterType="map" resultType="_int">
+   		select count(*)
+   		from zzim join product using(pro_num)
+		where user_num = #{id}
+   </select>
+   
+   <select id="getListCountScrap" parameterType="map" resultType="_int">
+select count(*)
+from clip c join board using(board_num)
+where c.user_num = #{id}
+   </select>
+   
+   <select id="seletAllScrap" parameterType="map" resultMap="Scrap">
+select board_title, ATTACH_NAME, b.board_num 
+from clip c join board b on c.board_num = b.board_num join attachment on serialnumber = b.board_num
+where c.user_num = #{id} and attachment.board_type=3 and board_status = 'Y'
+order by b.board_num desc
+   </select>
+   
+   	<!-- 리뷰 사진 넣기 -->
+	<insert id="insertExpertAttm">
+		insert into attachment
+		VALUES(SEQ_ATTACH.NEXTVAL, SYSDATE, #{attachName}, #{attachRename}, #{attachPath}, 6, #{userNum}, 'Y')
+	</insert>
+   
+   <update id="removeImage">
+   		update attachment
+		set ATTACH_STATUS = 'N'
+		where SERIALNUMBER=#{id} and BOARD_TYPE=6
+   </update>
+   
+      <select id="selectProfile" parameterType="map" resultMap="Attachment">
+		select *
+		from attachment 
+		where SERIALNUMBER=#{id} and BOARD_TYPE=6 and ATTACH_STATUS = 'Y'
+   </select>
+   
+   
+   
+   
+   <resultMap type="ScrapDto" id="Scrap">
+		<id column="board_num" property="boardNum"/>
+  		<result column="board_title" property="boardTitle"/>
+  		<result column="ATTACH_NAME" property="attachName"/>
+	</resultMap>
+	
+	<resultMap type="Attachment" id="Attachment">
+		<id column="ATTACH_NUM" property="attachNum"/>
+  		<result column="ATTACH_UPLOADDATE" property="attachUploadDate"/>
+  		<result column="ATTACH_NAME" property="attachName"/>
+  		<result column="ATTACH_RENAME" property="attachRename"/>
+  		<result column="ATTACH_PATH" property="attachPath"/>
+  		<result column="BOARD_TYPE" property="boardType"/>
+  		<result column="SERIALNUMBER" property="serialNumber"/>
+  		<result column="ATTACH_STATUS" property="attachStatus"/>
+	</resultMap>
+	
+	
+   <resultMap type="Member" id="loginResultMap">
+      <id column="USER_NUM" property="userNum"/>
+      <result column="USER_ID" property="userId"/>
+      <result column="USER_PWD" property="userPwd"/>
+      <result column="USER_NAME" property="userName"/>
+      <result column="USER_NICKNAME" property="userNickname"/>
+      <result column="USER_EMAIL" property="email"/>
+      <result column="USER_GENDER" property="gender"/>
+      <result column="USER_BIRTH" property="userBirth"/>
+      <result column="USER_PHONE" property="userPhone"/>
+      <result column="USER_RECOMMEND" property="userRecommend"/>
+      <result column="USER_ENROLLDATE" property="userEnrollDate"/>
+      <result column="USER_CNUMBER" property="userCNumber"/>
+      <result column="USER_STATUS" property="userStatus"/>
+      <result column="USER_MODIFYDATE" property="userModifyDate"/>
+      <result column="USER_POINT" property="userPoint"/>
+   </resultMap>
+
+	<resultMap type="ExpertUser" id="ExpertResultMap">
+		<id column="USER_NUM" property="userNum"/>
+		<result column="EXPERT_POSTADD" property="expertPostAdd"/>
+		<result column="EXPERT_ADDRESS" property="expertAddress"/>
+		<result column="EXPERT_ADD_DETAIL" property="expertAddDetail"/>
+		<result column="EXPERT_SORT" property="expertSort"/>
+		<result column="EXPERT_MEDI" property="expertMedi"/>
+		<result column="EXPERT_DEPT" property="expertDept"/>
+		<result column="EXPERT_PROFILE" property="expertProfile"/>
+		<result column="EXPERT_HOMEPAGE" property="expertHomepage"/>
+		<result column="EXPERT_CAREER" property="expertCareer"/>
+		<result column="EXPERT_ESTIMATE" property="expertEstimate"/>
+		<result column="EXPERT_LATITUDE" property="expertLatitude"/>
+		<result column="EXPERT_LONGITUDE" property="expertLongtitude"/>
+	</resultMap>
+	
+	<resultMap type="GeneralUser" id="GeneralResultMap">
+		<id column="USER_NUM" property="userNum"/>
+		<result column="USER_ZIPCODE" property="userZipcode"/>
+		<result column="USER_ADDRESS" property="userAddress"/>
+		<result column="USER_ADDRESS_DETAIL" property="userAddressDetail"/>
+		<result column="USER_HEALTH" property="userHealth"/>
+	</resultMap>
+	
+	<resultMap type="Point" id="pointResultMap">
+		<id column="POINT_NUM" property="pointNum"/>
+		<result column="POINT_CONTENT" property="pointContent"/>
+		<result column="POINT_AMOUNT" property="pointAmount"/>
+		<result column="POINT_DATE" property="pointDate"/>
+		<result column="USER_NUM" property="userNum"/>
+	</resultMap>
+	
+	<resultMap type="Coupon" id="couponResultMap">
+		<id column="COU_NUMBER" property="couNumber"/>
+		<result column="COU_PUBLISHDATE" property="couPublishDate"/>
+		<result column="COU_ENDDATE" property="couEndDate"/>
+		<result column="COU_USED" property="couUsed"/>
+		<result column="COU_DISCOUNT" property="couDiscount"/>
+		<result column="COU_INTRO" property="couIntro"/>
+		<result column="USER_NUM" property="userNum"/>
+		<result column="COU_REGISTER" property="couRegister"/>
+	</resultMap>
+	
+	<resultMap type="Board" id="boardResultMap">
+      <id column="BOARD_NUM" property="boardNum"/>
+      <result column="BOARD_TITLE" property="boardTitle"/>
+      <result column="BOARD_CONTENT" property="boardContent"/>
+      <result column="BOARD_CREATEDATE" property="boardCreateDate"/>
+      <result column="BOARD_MODIFYDATE" property="boardModifyDate"/>
+      <result column="BOARD_VIEW" property="boardView"/>
+      <result column="BOARD_STATUS" property="boardStatus"/>
+      <result column="USER_NUM" property="userNum"/>
+      <result column="BOARD_TYPE" property="boardType"/>
+   </resultMap>
+   
+   <resultMap type="Reply" id="replyResultMap">
+      <id column="REPLY_NUM" property="replyNum"/>
+      <result column="REPLY_CONTENT" property="replyContent"/>
+      <result column="REPLY_DATE" property="replyDate"/>
+      <result column="REPLY_STATUS" property="replyStatus"/>
+      <result column="BOARD_TYPE" property="boardType"/>
+      <result column="BOARD_NUM" property="boardNum"/>
+      <result column="USER_NUM" property="userNum"/>
+   </resultMap>
+   
+   <resultMap type="Review" id="reviewResultMap">
+      <id column="RV_NUM" property="rvNum"/>
+      <result column="PRO_NUM" property="proNum"/>
+      <result column="USER_NUM" property="userNum"/>
+      <result column="RV_CONTENT" property="rvContent"/>
+      <result column="RV_CREATEDATE" property="rvCreateDate"/>
+      <result column="RV_MODIFYDATE" property="rvMOdifyDate"/>
+      <result column="RV_STATUS" property="rvStatus"/>
+      <result column="RV_STAR" property="rvStar"/>
+      <result column="RV_BUY" property="rvBuy"/>
+      <result column="RV_RECOMMEND" property="userNickname"/>
+   </resultMap>
+   
+   	<!-- 영양제 폼 -->
+	<resultMap type="Supplement" id="SupplementResultSet">
+		<id column="PRO_NUM" property="proNum"/>
+		<result column="PRO_IMAGE" property="proImage"/>
+		<result column="PRO_NAME" property="proName"/>
+		<result column="PRO_COMPANY" property="proCompany"/>
+		<result column="PRO_INGREDIENT" property="proIngredient"/>
+		<result column="PRO_PRICE" property="proPrice"/>
+		<result column="PRO_EFFECT" property="proEffect"/>
+		<result column="PRO_INTAKE" property="proIntake"/>
+		<result column="PRO_SALE_STATUS" property="proSaleStatus"/>
+		<result column="PRO_CREATEDATE" property="proCreateDate"/>
+		<result column="PRO_MODIFYDATE" property="proModifyDate"/>
+		<result column="PRO_GRADE" property="proGrade"/>
+		<result column="PRO_STATUS" property="proStatus"/>
+		<result column="CATE_NUM" property="cateNum"/>
+	</resultMap>
+</mapper>

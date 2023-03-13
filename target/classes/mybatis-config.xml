@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+   <settings>
+      <setting name="jdbcTypeForNull" value="NULL"/>
+   </settings>
+   <typeAliases>
+      <typeAlias type="com.kh.young.model.vo.Address" alias="Address"/>
+      <typeAlias type="com.kh.young.model.vo.Answer" alias="Answer"/>
+      <typeAlias type="com.kh.young.model.vo.Attachment" alias="Attachment"/>
+
+      <typeAlias type="com.kh.young.model.vo.Board" alias="Board"/>
+      <typeAlias type="com.kh.young.model.vo.BoardMap" alias="BoardMap"/>
+
+      <typeAlias type="com.kh.young.model.vo.Cart" alias="Cart"/>
+      <typeAlias type="com.kh.young.model.vo.Clip" alias="Clip"/>
+      <typeAlias type="com.kh.young.model.vo.Coupon" alias="Coupon"/>
+      <typeAlias type="com.kh.young.model.vo.ChatMessage" alias="ChatMessage"/>
+      <typeAlias type="com.kh.young.model.vo.ChatReserv" alias="ChatReserv"/>
+      <typeAlias type="com.kh.young.model.vo.Chatroom" alias="Chatroom"/>
+
+      <typeAlias type="com.kh.young.model.vo.Event" alias="Event"/>
+      <typeAlias type="com.kh.young.model.vo.EventAttendance" alias="EventAttendance"/>
+      <typeAlias type="com.kh.young.model.vo.ExpertUser" alias="ExpertUser"/>
+       <typeAlias type="com.kh.young.model.vo.GeneralUser" alias="GeneralUser"/>
+      <typeAlias type="com.kh.young.model.vo.Member" alias="Member"/>
+
+      <typeAlias type="com.kh.young.model.vo.Orders" alias="Orders"/>
+      <typeAlias type="com.kh.young.model.vo.OrderDetails" alias="OrderDetails"/>
+      <typeAlias type="com.kh.young.model.vo.Point" alias="Point"/>
+      <typeAlias type="com.kh.young.model.vo.ProCategory" alias="ProCategory"/>
+
+      <typeAlias type="com.kh.young.model.vo.Question" alias="Question"/>
+      
+      <typeAlias type="com.kh.young.model.vo.Reply" alias="Reply"/>
+      <typeAlias type="com.kh.young.model.vo.Review" alias="Review"/>
+
+      <typeAlias type="com.kh.young.model.vo.Story" alias="Story"/>
+      <typeAlias type="com.kh.young.model.vo.Supplement" alias="Supplement"/>
+
+      <typeAlias type="com.kh.young.qna.dto.QuestionRespDto" alias="QuestionRespDto"/>
+      <typeAlias type="com.kh.young.qna.dto.AnswerRespDto" alias="AnswerRespDto"/>
+      <typeAlias type="com.kh.young.qna.dto.SupplementRespDto" alias="SupplementRespDto"/>
+      <typeAlias type="com.kh.young.qna.dto.ExpertRespDto" alias="ExpertRespDto"/>
+      <typeAlias type="com.kh.young.chat.dto.ChatroomDto" alias="ChatroomDto"/>
+      <typeAlias type="com.kh.young.myPage.dto.ScrapDto" alias="ScrapDto"/>
+      <typeAlias type="com.kh.young.shopping.dto.PaymentDTO" alias="PaymentDTO"/>
+      <typeAlias type="com.kh.young.shopping.dto.OrderListDTO" alias="OrderListDTO"/>
+      <typeAlias type="com.kh.young.shopping.dto.GetPayInfoDTO" alias="GetPayInfoDTO"/>
+
+   </typeAliases>
+        
+   <mappers>
+      <mapper resource="mappers/admin-mapper.xml"/>
+      <mapper resource="mappers/board-mapper.xml"/>
+      <mapper resource="mappers/event-mapper.xml"/>
+      <mapper resource="mappers/member-mapper.xml"/>
+      <mapper resource="mappers/mypage-mapper.xml"/>
+      <mapper resource="mappers/qna-mapper.xml"/>
+      <mapper resource="mappers/chat-mapper.xml"/>
+      <mapper resource="mappers/shopping-mapper.xml"/>
+      <mapper resource="mappers/story-mapper.xml"/>
+      <mapper resource="mappers/supplement-mapper.xml"/>
+   </mappers>
+
+</configuration>

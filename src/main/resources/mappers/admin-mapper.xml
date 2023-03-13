@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="adminMapper">
+
+   <select id="selectAdminCoupon" parameterType="map" resultMap="couponResultMap">
+      select *
+      from Coupon
+      where USER_num = #{id}
+   </select>
+   
+   <update id="alertCouponCa">
+      update Coupon 
+      set COU_USED = 'N'
+	  where COU_REGISTER = #{couRegister} and USER_NUM=#{id}
+   </update>
+   
+   <update id="alertCouponRe">
+      update Coupon 
+      set COU_USED = 'A'
+	  where COU_REGISTER = #{couRegister} and USER_NUM=#{id}
+   </update>
+	
+	
+	<resultMap type="Coupon" id="couponResultMap">
+		<id column="COU_NUMBER" property="couNumber"/>
+		<result column="COU_PUBLISHDATE" property="couPublishDate"/>
+		<result column="COU_ENDDATE" property="couEndDate"/>
+		<result column="COU_USED" property="couUsed"/>
+		<result column="COU_DISCOUNT" property="couDiscount"/>
+		<result column="COU_INTRO" property="couIntro"/>
+		<result column="USER_NUM" property="userNum"/>
+		<result column="COU_REGISTER" property="couRegister"/>
+	</resultMap>
+	
+	
+	
+</mapper>
